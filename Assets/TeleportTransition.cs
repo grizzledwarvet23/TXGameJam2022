@@ -21,7 +21,6 @@ public class TeleportTransition : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject);
         if(collision.gameObject.tag == "Player")
         {
             collision.gameObject.transform.position = newPosition;

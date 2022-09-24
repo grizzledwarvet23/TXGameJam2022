@@ -12,6 +12,8 @@ public class SpaceModifier : MonoBehaviour
 
     public SpriteRenderer[] positiveSprites;
     public GameObject toggleMapColliders;
+
+    public GameObject enemies;
     public Collider2D[] otherColliders;
 
     public Camera camera;
@@ -73,6 +75,10 @@ public class SpaceModifier : MonoBehaviour
             {
                 otherCollider.enabled = !otherCollider.enabled;
             }
+            foreach(Enemy enemy in enemies.GetComponentsInChildren<Enemy>())
+            {
+                enemy.swap();
+            } 
         yield return new WaitForSeconds(swapDuration);
         canSwitch = true;
     }

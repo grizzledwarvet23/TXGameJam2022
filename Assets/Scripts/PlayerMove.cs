@@ -37,6 +37,7 @@ public class PlayerMove : MonoBehaviour
         SlopeCheck();
         checkInsideWall();
         animator.SetBool("isGrounded", isGrounded);
+        animator.SetFloat("Speed", rb.velocity.x);
         if(isGrounded && Input.GetKeyDown(KeyCode.W))
         {
             rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
@@ -49,7 +50,7 @@ public class PlayerMove : MonoBehaviour
     {
         horizontalInput = getHorizontalInput();
         rb.velocity = new Vector2(horizontalSpeed * horizontalInput, rb.velocity.y);
-
+        
     }
 
     void SlopeCheck()
