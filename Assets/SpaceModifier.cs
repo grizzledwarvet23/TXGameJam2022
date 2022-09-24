@@ -33,18 +33,18 @@ public class SpaceModifier : MonoBehaviour
             {
                 foreach(Tilemap map in blackWhiteMaps.GetComponentsInChildren<Tilemap>())
                 {
-                    map.color = Color.black;
+                    StartCoroutine(fadeColor(map, Color.white, Color.black));
                 } 
-                player.GetComponent<SpriteRenderer>().color = Color.black;
+                StartCoroutine(fadeColor(player.GetComponent<SpriteRenderer>(), Color.white, Color.black));
                 camera.backgroundColor = Color.white;
             }
             else
             {
                 foreach(Tilemap map in blackWhiteMaps.GetComponentsInChildren<Tilemap>())
                 {
-                    map.color = Color.white;
-                }
-                player.GetComponent<SpriteRenderer>().color = Color.white;
+                    StartCoroutine(fadeColor(map, Color.black, Color.white));
+                } 
+                StartCoroutine(fadeColor(player.GetComponent<SpriteRenderer>(), Color.black, Color.white));
                 camera.backgroundColor = Color.black;
             }
             foreach(Tilemap map in toggleColliders.GetComponentsInChildren<Tilemap>())
@@ -52,4 +52,27 @@ public class SpaceModifier : MonoBehaviour
                 map.GetComponent<TilemapCollider2D>().enabled = !map.GetComponent<TilemapCollider2D>().enabled;
             }
     }
+
+    IEnumerator fadeColor(SpriteRenderer rend, Color startColor, Color endColor)
+    {
+        rend.color = startColor;
+        for(int i = 0; i <= 60; i++)
+        {
+            rend.color = Color.Lerp(startColor, endColor, i/60f);
+            yield return new WaitForSeconds(0.02f);
+        }
+        
+    }
+
+    IEnumerator fadeColor(Tilemap rend, Color startColor, Color endColor)
+    {
+        rend.color = startColor;
+        for(int i = 0; i <= 60; i++)
+        {
+            rend.color = Color.Lerp(startColor, endColor, i/60f);
+            yield return new WaitForSeconds(0.02f);
+        }
+        
+    }
+    
 }
