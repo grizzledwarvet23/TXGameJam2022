@@ -11,6 +11,8 @@ public class SpaceModifier : MonoBehaviour
 
     public Camera camera;
     public GameObject player;
+
+    private float fadeK = 30f;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,12 +33,14 @@ public class SpaceModifier : MonoBehaviour
         isPositiveSpace = !isPositiveSpace;
             if(isPositiveSpace)
             {
+
+                Debug.Log("yo");
                 foreach(Tilemap map in blackWhiteMaps.GetComponentsInChildren<Tilemap>())
                 {
                     StartCoroutine(fadeColor(map, Color.white, Color.black));
                 } 
                 StartCoroutine(fadeColor(player.GetComponent<SpriteRenderer>(), Color.white, Color.black));
-                camera.backgroundColor = Color.white;
+                StartCoroutine(fadeColor(camera, Color.black, Color.white));
             }
             else
             {
@@ -45,7 +49,8 @@ public class SpaceModifier : MonoBehaviour
                     StartCoroutine(fadeColor(map, Color.black, Color.white));
                 } 
                 StartCoroutine(fadeColor(player.GetComponent<SpriteRenderer>(), Color.black, Color.white));
-                camera.backgroundColor = Color.black;
+                
+                StartCoroutine(fadeColor(camera, Color.white, Color.black));
             }
             foreach(Tilemap map in toggleColliders.GetComponentsInChildren<Tilemap>())
             {
@@ -56,9 +61,9 @@ public class SpaceModifier : MonoBehaviour
     IEnumerator fadeColor(SpriteRenderer rend, Color startColor, Color endColor)
     {
         rend.color = startColor;
-        for(int i = 0; i <= 60; i++)
+        for(int i = 0; i <= fadeK; i++)
         {
-            rend.color = Color.Lerp(startColor, endColor, i/60f);
+            rend.color = Color.Lerp(startColor, endColor, i/fadeK);
             yield return new WaitForSeconds(0.02f);
         }
         
@@ -67,9 +72,20 @@ public class SpaceModifier : MonoBehaviour
     IEnumerator fadeColor(Tilemap rend, Color startColor, Color endColor)
     {
         rend.color = startColor;
-        for(int i = 0; i <= 60; i++)
+        for(int i = 0; i <= fadeK; i++)
         {
-            rend.color = Color.Lerp(startColor, endColor, i/60f);
+            rend.color = Color.Lerp(startColor, endColor, i/fadeK);
+            yield return new WaitForSeconds(0.02f);
+        }
+        
+    }
+
+    IEnumerator fadeColor(Camera rend, Color startColor, Color endColor)
+    {
+        rend.backgroundColor = startColor;
+        for(int i = 0; i <= fadeK; i++)
+        {
+            rend.backgroundColor = Color.Lerp(startColor, endColor, i/fadeK);
             yield return new WaitForSeconds(0.02f);
         }
         
