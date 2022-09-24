@@ -22,8 +22,7 @@ public class SpaceModifier : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            
-            
+            switchSpace();
         }
     }
 
@@ -47,6 +46,10 @@ public class SpaceModifier : MonoBehaviour
                 }
                 player.GetComponent<SpriteRenderer>().color = Color.white;
                 camera.backgroundColor = Color.black;
+            }
+            foreach(Tilemap map in toggleColliders.GetComponentsInChildren<Tilemap>())
+            {
+                map.GetComponent<TilemapCollider2D>().enabled = !map.GetComponent<TilemapCollider2D>().enabled;
             }
     }
 }
