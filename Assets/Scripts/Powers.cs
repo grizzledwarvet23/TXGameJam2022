@@ -19,5 +19,13 @@ bluePower() {
     if land, speed will decrease by *** until 0
 }
 
+greenPower() {
+    pushes moveable blocks away
+}
+
+redPower() {
+    pulls "moveable" blocks towards you 
+    
+}
 
 */
