@@ -11,6 +11,7 @@ public class SpaceModifier : MonoBehaviour
     public static bool isPositiveSpace;
     private float swapDuration = 0.2f;
     public GameObject blackWhiteMaps;
+    public Tilemap yellowBlueMap; 
 
     public SpriteRenderer[] positiveSprites;
     public GameObject toggleMapColliders;
@@ -55,7 +56,8 @@ public class SpaceModifier : MonoBehaviour
                 foreach(SpriteRenderer renderer in positiveSprites)
                 {
                     StartCoroutine(fadeColor(renderer, Color.white, Color.black));
-                } 
+                }
+                StartCoroutine(fadeColor(yellowBlueMap, Color.blue, Color.yellow)); 
                 StartCoroutine(fadeColor(player.GetComponent<SpriteRenderer>(), Color.white, Color.black));
                 StartCoroutine(fadeColor(camera, Color.black, Color.white));
 
@@ -72,6 +74,7 @@ public class SpaceModifier : MonoBehaviour
                 {
                     StartCoroutine(fadeColor(renderer, Color.black, Color.white));
                 } 
+                StartCoroutine(fadeColor(yellowBlueMap, Color.yellow, Color.blue));
                 StartCoroutine(fadeColor(player.GetComponent<SpriteRenderer>(), Color.black, Color.white));
                 StartCoroutine(fadeColor(camera, Color.white, Color.black));
 
