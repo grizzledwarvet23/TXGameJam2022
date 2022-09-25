@@ -92,7 +92,8 @@ public class SpaceModifier : MonoBehaviour
             foreach(Enemy enemy in enemies.GetComponentsInChildren<Enemy>())
             {
                 enemy.swap();
-            } 
+            }
+            yellowBlueMap.GetComponent<YellowBlue>().swap(); 
         yield return new WaitForSeconds(swapDuration);
         canSwitch = true;
     }

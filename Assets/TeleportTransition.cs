@@ -11,6 +11,15 @@ public class TeleportTransition : MonoBehaviour
 
     public GameObject[] objectsToActivate;
     public GameObject[] objectsToDisable;
+
+    public bool musicTransition;
+    public AudioSource positiveSource;
+    public AudioSource negativeSource;
+
+    public AudioClip newPositiveMusic;
+    public AudioClip newNegativeMusic;
+
+
     
     void Start()
     {
@@ -35,6 +44,23 @@ public class TeleportTransition : MonoBehaviour
             foreach(GameObject obj in objectsToDisable)
             {
                 obj.SetActive(false);
+            }
+
+            if(musicTransition)
+            {
+                float posTime = positiveSource.time;
+                float negTime = positiveSource.time;
+
+                positiveSource.clip = newPositiveMusic;
+                negativeSource.clip = newNegativeMusic;
+
+                positiveSource.Play();
+                negativeSource.Play();
+
+                positiveSource.time = posTime;
+                negativeSource.time = negTime;
+                
+
             }
         }
     }

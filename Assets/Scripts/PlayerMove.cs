@@ -19,13 +19,30 @@ public class PlayerMove : MonoBehaviour
     public Transform leftGroundCheck;
     public Transform rightGroundCheck;
 
+    private bool facingRight;
+    private bool slippery = false;
+    public float speedCap = 15;
+
+
     public Vector2 spawnPosition;
+
+    //wall jump stuff
+    [Header("Wall Jump")]
+    public LayerMask wallJumpMask;
+    public float wallJumpTime = 0.2f;
+    public float wallSlideSpeed = 0.3f;
+    public float wallDistance = 0.3f;
+    bool isWallSliding = false;
+    bool enteredWall = false;
+    RaycastHit2D wallCheckHit;
+    float jumpTime;
 
     private Animator animator;
     
     // Start is called before the first frame update
     void Start()
     {
+        facingRight = true;
         isGrounded = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -37,10 +54,19 @@ public class PlayerMove : MonoBehaviour
         SlopeCheck();
         checkInsideWall();
         animator.SetBool("isGrounded", isGrounded);
-        animator.SetFloat("Speed", rb.velocity.x);
-        if(isGrounded && Input.GetKeyDown(KeyCode.W))
+        animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
+        animator.SetFloat("VerticalSpeed", rb.velocity.y);
+        if(Input.GetKeyDown(KeyCode.W) && (isGrounded || (isWallSliding && enteredWall) ))
         {
-            rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
+            enteredWall = false;
+            if(isWallSliding)
+            {
+                rb.AddForce(Vector2.up * (jumpSpeed + 3), ForceMode2D.Impulse);    
+            }
+            else
+            {
+                rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
+            }
             animator.Play("player_jump");
         }
     }
@@ -49,9 +75,73 @@ public class PlayerMove : MonoBehaviour
     void FixedUpdate()
     {
         horizontalInput = getHorizontalInput();
-        rb.velocity = new Vector2(horizontalSpeed * horizontalInput, rb.velocity.y);
+
+        if(!slippery)
+        {
+            rb.velocity = new Vector2(horizontalSpeed * horizontalInput, rb.velocity.y);
+        }
+        else
+        {
+            rb.AddForce(new Vector2(0.1f * horizontalInput * horizontalSpeed, 0), ForceMode2D.Impulse);
+            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
+        }
+        
+        if(horizontalInput > 0 && !facingRight)
+        {
+            Flip();
+        }
+        else if(horizontalInput < 0 && facingRight)
+        {
+            Flip();
+        }
+
+
+        //wall jumpy
+        if(facingRight)
+        {
+            wallCheckHit = Physics2D.Raycast(transform.position,
+            new Vector2(wallDistance, 0), wallDistance, wallJumpMask);
+            Debug.DrawRay(transform.position, new Vector2(wallDistance, 0), Color.red);
+        }
+        else
+        {
+            wallCheckHit = Physics2D.Raycast(transform.position,
+            new Vector2(-wallDistance, 0), wallDistance, wallJumpMask);
+            Debug.DrawRay(transform.position, new Vector2(-wallDistance, 0), Color.red);
+        }
+
+        animator.SetBool("isWallSliding", false);
+        if(enteredWall && wallCheckHit && wallCheckHit.collider.tag == "WallJumpable" && !isGrounded && horizontalInput!=0)
+        {
+            isWallSliding = true;
+            jumpTime = Time.timeSinceLevelLoad + wallJumpTime;  
+            animator.SetBool("isWallSliding", true);
+        }
+    
+        else if(jumpTime < Time.timeSinceLevelLoad)
+        {
+            isWallSliding = false;
+        }
+        
+        
+
+        if(isWallSliding && enteredWall)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
+        }
+        
         
     }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if(col.gameObject.tag == "WallJumpable")
+        {
+            Debug.Log("Entered");
+            enteredWall = true;
+        }
+    }
+    
 
     void SlopeCheck()
     {
@@ -91,6 +181,14 @@ public class PlayerMove : MonoBehaviour
         
     }
 
+    void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+    }
+
     void checkInsideWall()
     {
         RaycastHit2D sideHit = Physics2D.Raycast(sideCheck.position, Vector2.right, 0.2f, groundMask);
@@ -121,15 +219,26 @@ public class PlayerMove : MonoBehaviour
         }
         
     
-        if( (leftGC.collider != null && leftGC.collider.tag == "Ground") || 
-        (rightGC.collider != null && rightGC.collider.tag == "Ground"))
+        if( (leftGC.collider != null /* && leftGC.collider.tag == "Ground"*/) || 
+        (rightGC.collider != null /* && rightGC.collider.tag == "Ground"*/))
         {
             isGrounded = true;
+            if(leftGC.collider != null && leftGC.collider.tag == "Slippery" || 
+            rightGC.collider != null && rightGC.collider.tag == "Slippery")
+            {
+                slippery = true;
+            }
+            else
+            {
+                slippery = false;
+            }
         }
         else
         {
             isGrounded = false;
         }
+
+
     }
 
     int getHorizontalInput()

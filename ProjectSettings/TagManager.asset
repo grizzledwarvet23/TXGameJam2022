@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - Enemy
+  - WallJumpable
+  - Slippery
   layers:
   - Default
   - TransparentFX
@@ -40,6 +42,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Foreground
+    uniqueID: 540764587
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
