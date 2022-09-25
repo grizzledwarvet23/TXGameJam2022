@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
-        hostile = false;
+        hostile = SpaceModifier.isPositiveSpace;
 
         //follow the player if hostile
     }

@@ -6,8 +6,10 @@ using UnityEngine.Tilemaps;
 public class SpaceModifier : MonoBehaviour
 {
     private bool canSwitch;
-    private bool isPositiveSpace;
-    private float swapDuration = 0.3f;
+
+    [System.NonSerialized]
+    public static bool isPositiveSpace;
+    private float swapDuration = 0.2f;
     public GameObject blackWhiteMaps;
 
     public SpriteRenderer[] positiveSprites;
@@ -19,7 +21,7 @@ public class SpaceModifier : MonoBehaviour
     public Camera camera;
     public GameObject player;
 
-    private float fadeK = 15f;
+    private float fadeK = 10f;
     // Start is called before the first frame update
     void Start()
     {

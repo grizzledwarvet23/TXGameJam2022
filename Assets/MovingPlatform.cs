@@ -24,7 +24,7 @@ public class MovingPlatform : MonoBehaviour
     {
         if(isHorizontal)
         {
-
+            rb.velocity = new Vector2(Mathf.Sin((Time.timeSinceLevelLoad - timeStarted) / period) * speed, 0);
         }
         else
         {
