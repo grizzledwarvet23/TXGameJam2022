@@ -7,6 +7,9 @@ public class Enemy : MonoBehaviour
     private bool hostile; 
     private Rigidbody2D rb;
     private GameObject player;
+    public Vector2 spawnPosition;
+
+    private bool canFollow = true;
 
     // Start is called before the first frame update
     void Start()
@@ -14,17 +17,17 @@ public class Enemy : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
         hostile = SpaceModifier.isPositiveSpace;
-
+        spawnPosition = transform.position;
         //follow the player if hostile
     }
 
     void FixedUpdate()
     {
         //follow the player if hostile
-        if(hostile)
+        if(hostile && canFollow)
         {
-            float xSpeed = (player.transform.position.x - transform.position.x) * 0.5f;
-            float ySpeed = (player.transform.position.y - transform.position.y) * 0.5f;
+            float xSpeed = (player.transform.position.x - transform.position.x) * 0.6f;
+            float ySpeed = (player.transform.position.y - transform.position.y) * 0.6f;
 
                 if(Mathf.Abs(xSpeed) > 14)
             {
@@ -56,7 +59,21 @@ public class Enemy : MonoBehaviour
         if(collision.gameObject.tag == "Player" && hostile)
         {
             collision.gameObject.transform.position = collision.gameObject.GetComponent<PlayerMove>().spawnPosition;
+            reset();
         }
+    }
+
+    public void reset()
+    {
+        transform.position = spawnPosition;
+        canFollow = false;
+        StartCoroutine(setFollow());
+    }
+
+    IEnumerator setFollow()
+    {
+        yield return new WaitForSeconds(0.25f);
+        canFollow = true;
     }
 
     

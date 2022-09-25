@@ -15,6 +15,9 @@ public class SpaceModifier : MonoBehaviour
     public SpriteRenderer[] positiveSprites;
     public GameObject toggleMapColliders;
 
+    public AudioSource positiveMusic;
+    public AudioSource negativeMusic;
+
     public GameObject enemies;
     public Collider2D[] otherColliders;
 
@@ -55,6 +58,9 @@ public class SpaceModifier : MonoBehaviour
                 } 
                 StartCoroutine(fadeColor(player.GetComponent<SpriteRenderer>(), Color.white, Color.black));
                 StartCoroutine(fadeColor(camera, Color.black, Color.white));
+
+                positiveMusic.volume = 1;
+                negativeMusic.volume = 0;
             }
             else
             {
@@ -68,6 +74,9 @@ public class SpaceModifier : MonoBehaviour
                 } 
                 StartCoroutine(fadeColor(player.GetComponent<SpriteRenderer>(), Color.black, Color.white));
                 StartCoroutine(fadeColor(camera, Color.white, Color.black));
+
+                positiveMusic.volume = 0;
+                negativeMusic.volume = 1;
             }
             foreach(Tilemap map in toggleMapColliders.GetComponentsInChildren<Tilemap>())
             {
