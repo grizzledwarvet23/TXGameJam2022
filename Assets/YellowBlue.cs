@@ -13,7 +13,6 @@ public class YellowBlue : MonoBehaviour
 
     public void swap()
     {
-        Debug.Log("hey");
         yellow = !yellow;
         if(yellow)
         {

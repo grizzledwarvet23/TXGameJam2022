@@ -23,6 +23,7 @@ public class PlayerMove : MonoBehaviour
     private bool slippery = false;
     public float speedCap = 15;
 
+    public AudioSource jumpSound;
 
     public Vector2 spawnPosition;
 
@@ -67,6 +68,7 @@ public class PlayerMove : MonoBehaviour
             {
                 rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
             }
+            jumpSound.Play();
             animator.Play("player_jump");
         }
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TeleportTransition : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class TeleportTransition : MonoBehaviour
     public AudioClip newPositiveMusic;
     public AudioClip newNegativeMusic;
 
+    public bool finalTransition;
+
 
     
     void Start()
@@ -32,6 +35,12 @@ public class TeleportTransition : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
+            if(finalTransition)
+            {
+                StartCoroutine(end());
+            }
+            else
+            {
             collision.gameObject.transform.position = newPosition;
             collision.gameObject.GetComponent<PlayerMove>().spawnPosition = newSpawnPosition;
             oldCamera.SetActive(false);
@@ -62,6 +71,19 @@ public class TeleportTransition : MonoBehaviour
                 
 
             }
+            }
         }
+    }
+
+    IEnumerator end()
+    {
+        //fade the music out
+        while(positiveSource.volume > 0)
+        {
+            positiveSource.volume -= 0.01f;
+            negativeSource.volume -= 0.01f;
+            yield return new WaitForSeconds(0.01f);
+        }
+        SceneManager.LoadScene("MainMenu");
     }
 }
